@@ -21,6 +21,13 @@ import java.util.Map;
 //이 클래스는 Controller 야!!!
 public class HomeController
 {
+    List<Person> personList;
+
+    public HomeController()
+    {
+        personList = new ArrayList<>();
+    }
+
     @GetMapping("/home/main")
     //개발자가 /home/main 이르는 요청을 보내면  아래 메소드를 실행하라.
     //localhost:8080/home/main
@@ -179,20 +186,20 @@ public class HomeController
     @GetMapping("/home/returnArticleMapList")
     /* localhost:8080/home/returnArticleMapList
         스프링부트는 JSON 으로 자동 변환시키는 jackson 이라는 라이브러리를 탑재하고 있다.
-        [
-          {
+        [ //배열 시작
+          { //객체 시작
             "id": 1,
             "subject": "제목1",
             "content": "내용1",
             "articleNo": [1, 2, 3]
-          },
-          {
+          }, //객체 끝
+          {  //객체 시작
             "id": 1,
             "subject": "제목2",
             "content": "내용2",
             "articleNo": [4, 5, 6]
-          }
-        ]
+          }  //객체 끝
+        ] //배열 끝
     */
     @ResponseBody
     public List<Map<String, Object>> showReturneMapList()
@@ -267,6 +274,40 @@ public class HomeController
         return list; //원래는 주소가 보내어지는데, 스프링부트는 JSON 으로 자동 변환시키는 jackson 이라는 라이브러리를 탑재하고 있다.
     }
 
+    //25 02 04, 스프링부트 기초, 15강, 사람을 추가하는 기능을 구현
+    @GetMapping("/home/addPerson")
+    /*
+        localhost:8080/home/addPerson?name=홍길동&age=11 --> 1번 사람이 추가 되었습니다.
+        localhost:8080/home/addPerson?name=홍길순&age=22 --> 2번 사람이 추가 되었습니다.
+        localhost:8080/home/addPerson?name=임꺽정&age=33 --> 3번 사람이 추가 되었습니다.
+        localhost:8080/home/shwPeople
+     */
+    @ResponseBody
+    public String addPerson(String name, int age)
+    {
+        Person p = new Person(name, age);
+        System.out.println("hashCode:" + p.hashCode() + " : " + p);
+        personList.add(p);
+        return "%d번 사람이 추가 되었습니다".formatted(p.getId());
+    }
+
+    @GetMapping("/home/showPeople")
+    /*
+         [
+          {
+            "id": 1,
+            "name": "홍길동",
+            "age": 11
+          },
+          {"id":2,"name":"홍길동","age":11},{"id":3,"name":"홍길동","age":11},{"id":4,"name":"홍길동","age":11},{"id":5,"name":"홍길동","age":11}
+        ]
+     */
+    @ResponseBody
+    public List<Person> showPeople()
+    {
+        return personList;
+    }
+
     class Article
     {
         private final int id;
@@ -329,7 +370,7 @@ public class HomeController
         }
     }
 
-    //lombok
+    //lombok - getter, setter, constructor, toString을 자동으로 대체하여 코드가 간단해 진다.
     @Getter
     @Setter
     @AllArgsConstructor
@@ -340,5 +381,26 @@ public class HomeController
         private String subject;
         private String content;
         private List<Integer> articleNo;
+    }
+
+    @AllArgsConstructor
+    @Getter
+    @Setter
+    @ToString
+    class Person
+    {
+        private static  int lastId;
+        private final int id;
+        private String name;
+        private int age;
+
+        static
+        {
+            lastId = 0;
+        }
+        public Person(String name, int age)
+        {
+            this(++lastId, name, age);
+        }
     }
 }
