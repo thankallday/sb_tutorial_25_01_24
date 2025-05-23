@@ -362,6 +362,65 @@ public class HomeController
         return (removed ? "%d번 사람이 삭제 되었습니다.".formatted(id) : "%d번 사람은 존재하지 않습니다".formatted(id));
     }
 
+    //25 02 04, 스프링부트 기초, 17강, 사람 수정 기능 구현
+    @GetMapping("/home/modifyPerson")
+    /*
+        localhost:8080/home/personTestCase
+        localhost:8080/home/showPeople
+        localhost:8080/home/modifyPerson?id=1&name=홍홍홍&age=44
+        localhost:8080/home/modifyPerson?id=2&name=홍길길&age=55
+        localhost:8080/home/showPeople
+        [{"id":1,"name":"홍홍홍","age":44},
+         {"id":2,"name":"홍길길","age":55},
+         {"id":3,"name":"임꺽정","age":33}
+        ]
+     */
+    @ResponseBody
+    public String modifyPerson(int id, String name, int age)
+    {
+//        Person target = null;
+//        for (Person p : personList)
+//        {
+//            if (p.getId() == id)
+//            {
+//                target = p;
+//                break;
+//            }
+//        }
+//
+//        if (target == null)
+//            return "%d번 사람은 존재하지 않습니다".formatted(id);
+//        target.setName(name);
+//        target.setAge(age);
+//        return "%d번 사람이 수정 되었습니다.".formatted(id);
+
+        Person target = personList.stream()
+            .filter(p -> p.getId() == id) //해당 녀석이 true 인 것만 필터링
+            .findFirst() //찾은 것 중에 하나만 남은 것, 그 남은 것을 필터링
+            .orElse(null); //없으면 null을 반환
+        /*
+          DashboardApiHelper.java
+          public static String getLastItemFromRoleUrl(String roleUrl)
+          {
+            if (roleUrl == null) return null;
+            return Arrays.stream(roleUrl.split(",")) //roleUrl 문자열을 쉼표를 구분 기호로 사용하여 부분 문자열 배열로 분할합니다.
+                                                     //그런 다음 Arrays.stream()메서드는 이 배열에서 스트림을 생성합니다.
+                .map(String::trim) //각 요소(부분 문자열)는 앞뒤 공백을 제거합니다
+                                   //Each element in the stream (substring) is trimmed to remove leading and trailing whitespace
+                .reduce((first, second) -> second) //selects the last element of the stream.
+                .orElse(null) //returning null if no elements are present
+                .replaceAll("[)';]", "")
+                .trim();
+          }
+        */
+
+        if (target == null)
+            return "%d번 사람은 존재하지 않습니다".formatted(id);
+        target.setName(name);
+        target.setAge(age);
+        return "%d번 사람이 수정 되었습니다.".formatted(id);
+    }
+
     class Article
     {
         private final int id;
