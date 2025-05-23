@@ -308,6 +308,60 @@ public class HomeController
         return personList;
     }
 
+    //25 02 04, 스프링부트 기초, 16강, 사람 삭제 기능 구현
+    @GetMapping("/home/personTestCase")
+    @ResponseBody
+    public String personTestCase()
+    {
+        personList.add(new Person("홍길동", 11));
+        personList.add(new Person("홍길순", 22));
+        personList.add(new Person("임꺽정", 33));
+        return "테스트케이스 추가";
+    }
+
+    @GetMapping("/home/removePerson")
+    /*
+        localhost:8080/home/personTestCase
+        localhost:8080/home/showPeople
+        localhost:8080/home/removePerson?id=2
+        localhost:8080/home/showPeople
+        [
+          {
+            "id": 1,
+            "name": "홍길동",
+            "age": 11
+          },
+          {
+            "id": 3,
+            "name": "임꺽정",
+            "age": 33
+          }
+        ]
+     */
+    @ResponseBody
+    public String removePerson(int id)
+    {
+//        Person target = null;
+//        for (Person p : personList)
+//        {
+//            if (p.getId() == id)
+//            {
+//                target = p;
+//                break;
+//            }
+//        }
+//
+//        if (target == null)
+//            return "%d번 사람은 존재하지 않습니다".formatted(id);
+//        personList.remove(target);
+//        return "%d번 사람이 삭제 되었습니다.".formatted(id);
+
+        //리스트에서 해당 요소가 있으면 삭제
+        //삭제가 성공하면 true, 실패하면 false 반환
+        boolean removed = personList.removeIf(person -> person.getId() == id);
+        return (removed ? "%d번 사람이 삭제 되었습니다.".formatted(id) : "%d번 사람은 존재하지 않습니다".formatted(id));
+    }
+
     class Article
     {
         private final int id;
