@@ -35,11 +35,11 @@ public class MemberController
 //            put("resultCode", "S-1");
 //            put("msg", "%s 님 환영합니다.".formatted(username));
 //        }};
-        if(username == "null" || username.trim().isEmpty())
+        if(username == null || username.trim().isEmpty())
         {
             return ResultData.of("F-1", "로그인 아이디를 입력해 주세요.");
         }
-        if(password == "null" || password.trim().isEmpty())
+        if(password == null || password.trim().isEmpty())
         {
             return ResultData.of("F-2", "로그인 비번을 입력해 주세요.");
         }
