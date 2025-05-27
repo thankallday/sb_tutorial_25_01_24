@@ -1,4 +1,4 @@
-package com.sbs.tutorial1.controller;
+package com.sbs.tutorial1.boundedContext.home.controller;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,6 +18,9 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+//강사 GitTub
+//https://github.com/SangWon7242/sb_tutorial1_25_01_24
 
 @Controller
 //개발자가 스프링부트에게
