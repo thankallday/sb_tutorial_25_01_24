@@ -43,6 +43,12 @@ public class MemberService
             return ResultData.of("F-3", "%s(은)는 존재하지 않는 회원입니다.".formatted(member.getUsername()));
         if(!member.getPassword().equals(password))
             return ResultData.of("F-4", "비밀번호가 일치하지 않습니다.");
-        return ResultData.of("S-1", "%s 님 환영합니다.".formatted(username));
+
+        return ResultData.of("S-1", "%s 님 환영합니다.".formatted(username), member.getId());
+    }
+
+    public Member findById(long loggedInMemberId)
+    {
+        return memberRepository.findById(loggedInMemberId);
     }
 }

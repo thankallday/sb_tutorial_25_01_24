@@ -35,4 +35,12 @@ public class MemberRepository
             .findFirst()
             .orElse(null);
     }
+
+    public Member findById(long loggedInMemberId)
+    {
+        return members.stream()
+            .filter(member -> member.getId() == loggedInMemberId)
+            .findFirst()
+            .orElse(null);
+    }
 }
