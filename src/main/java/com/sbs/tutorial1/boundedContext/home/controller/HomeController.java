@@ -1,5 +1,6 @@
 package com.sbs.tutorial1.boundedContext.home.controller;
 
+import com.sbs.tutorial1.boundedContext.member.service.MemberService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -7,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,7 +24,7 @@ import java.util.Map;
 //강사 GitTub
 //https://github.com/SangWon7242/sb_tutorial1_25_01_24
 
-@Controller
+@Controller //new HomeController() 가 없지만 @Controller --> F3 --> See @Component --> 객체가 자동으로 만들어 진다.
 //개발자가 스프링부트에게
 //이 클래스는 웹 요청을 받아서 작업을 한다
 //이 클래스는 Controller 야!!!
@@ -30,6 +32,12 @@ public class HomeController
 {
     List<Person> personList;
     int num = 0;
+
+    //25 02 04, 스프링부트 기초, 23강, MemberService 클래스를 Ioc 컨테이너에 등록한 후, 필요한 곳에서 @Autowire 를 사용하여 리모콘을 공유받음
+    //스프링부트 IOC 컨테이너에 의존한다. IOC 컨테이너에 의해서 memberService 객체가 만들어 진다.
+    //try MemberService --> F3 --> See @Service --> F3 --> See @Component. So, @Component 가 MemberService에 생략되어 있다.
+    @Autowired //필드 주입 방식--> NullPointException 이 가끔 발생하므로 생정자 주입 방식을 주로 사용한다.
+    private MemberService memberService;
 
     public HomeController()
     {
