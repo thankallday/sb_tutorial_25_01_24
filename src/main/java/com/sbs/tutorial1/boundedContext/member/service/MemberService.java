@@ -4,6 +4,7 @@ package com.sbs.tutorial1.boundedContext.member.service;
 import com.sbs.tutorial1.boundedContext.base.rsData.ResultData;
 import com.sbs.tutorial1.boundedContext.member.entity.Member;
 import com.sbs.tutorial1.boundedContext.member.repository.MemberRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 //25 02 04, 스프링부트 기초, 20강, 로그인 정보가 올바른지 체크, user1/1234 로 로그인 했을 때만 성공처리, RsData 클래스 도입하여 공통 보고서 양식을 도입
@@ -13,16 +14,18 @@ import org.springframework.stereotype.Service;
 // --> try F3 --> See @Component
 //@Component 기 생략되어 있다.@Service 와 @Component 는 같은 의미. 가독성 때문에 @Service 라고만 쓴다.
 //@Component 가 붙은 클래스는 IOC 컨테이너에 의한 생사소멸이 관리된다.
+@AllArgsConstructor
 public class MemberService
 {
     //25 02 04, 스프링부트 기초, 21강, Member, MemberRepository 도입, 회원 10명 추가
-    private MemberRepository memberRepository;
+//    //생성자 주입 방식
+//    private MemberRepository memberRepository;
+//    public MemberService()
+//    {
+//        memberRepository = new MemberRepository();
+//    }
 
-    public MemberService()
-    {
-        memberRepository = new MemberRepository();
-    }
-
+    private final MemberRepository memberRepository; //생성자 주입대신에 final 로 하고 롬복 @AllArgsConstructor 을 이용한다.
 
     //localhost:8080/member/login?username=user1&password=1234
     public ResultData tryLogin(String username, String password)

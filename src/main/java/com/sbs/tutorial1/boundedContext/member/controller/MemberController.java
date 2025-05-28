@@ -2,6 +2,7 @@ package com.sbs.tutorial1.boundedContext.member.controller;
 
 import com.sbs.tutorial1.boundedContext.base.rsData.ResultData;
 import com.sbs.tutorial1.boundedContext.member.service.MemberService;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 //25 02 04, 스프링부트 기초, 20강, 로그인 정보가 올바른지 체크, user1/1234 로 로그인 했을 때만 성공처리, RsData 클래스 도입하여 공통 보고서 양식을 도입
 @Controller //new MemberController() 가 없지만 @Controller --> F3 --> See @Component --> 객체가 자동으로 만들어 진다.
 @RequestMapping("/member") //이렇게 하면 MemberController 에서 /member로 시작하는 URL을 처리할 수 있습니다.
+@AllArgsConstructor
 public class MemberController
 {
 
@@ -19,11 +21,11 @@ public class MemberController
     */
 
     private final MemberService memberService;
-    //생성자 주입방식
-    public MemberController(MemberService memberService)
-    {
-        this.memberService = memberService;
-    }
+//    //생성자 주입방식 --> 대신에 롬복을 써도 된다. 25 02 06, 스프링부트 기초, 24강, MemberRepository 클래스를 Ioc 컨테이너에 등록한 후, 필요한 곳에서 @Autowire 를 사용하여 리모콘을 공유받음
+//    public MemberController(MemberService memberService)
+//    {
+//        this.memberService = memberService;
+//    }
 //    private MemberController ()  ----->>> @Autowired 로 대체된다. -->> IOC 컨테이너에 의해 자동으로 memberService 객체가 만들어진다.
 //    {
 //        memberService = new MemberService();
