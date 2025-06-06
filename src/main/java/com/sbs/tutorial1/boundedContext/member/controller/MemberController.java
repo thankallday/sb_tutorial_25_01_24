@@ -1,5 +1,6 @@
 package com.sbs.tutorial1.boundedContext.member.controller;
 
+import com.sbs.tutorial1.boundedContext.base.rq.Rq;
 import com.sbs.tutorial1.boundedContext.base.rsData.ResultData;
 import com.sbs.tutorial1.boundedContext.member.entity.Member;
 import com.sbs.tutorial1.boundedContext.member.service.MemberService;
@@ -80,7 +81,10 @@ public class MemberController
     @ResponseBody
     public ResultData showMe(HttpServletRequest req, HttpServletResponse resp)
     {
-        long loggedInMemberId = 0;
+        Rq rq = new Rq(req, resp); //Rq 객체를 생성하여 요청과 응답을 전달한다.
+        long loggedInMemberId = rq.getCoolieAsLong("loggedInMemberId", 0); //쿠키에서 loggedInMemberId 값을 가져온다. 없으면 0을 반환한다.
+
+
 
         if (req.getCookies() != null) //요청에 쿠키가 없으면
         {
@@ -106,7 +110,10 @@ public class MemberController
     //localhost:8080/member/login?username=user1&password=1234
     @GetMapping("/login") //@RequestMapping("/member") 했기 때문에 /member/login 과 동일하다.
     @ResponseBody
-    public ResultData login(String username, String password, HttpServletResponse resp) {
+    public ResultData login(String username, String password, HttpServletRequest req, HttpServletResponse resp) {
+        Rq rq = new Rq(req, resp); //Rq 객체를 생성하여 요청과 응답을 전달한다.
+
+
 //        Map<String, Object> rsData = new LinkedHashMap<>() {{
 //            put("resultCode", "S-1");
 //            put("msg", "%s 님 환영합니다.".formatted(username));
@@ -125,9 +132,8 @@ public class MemberController
         ResultData resultData = memberService.tryLogin(username, password);
         if (resultData.isSuccess())
         {
-            long memerId = (long) resultData.getData();
-            resp.addCookie(new Cookie("loggedInMemberId", memerId + ""));
-            //https://youtu.be/6FfpdXjqW_w?list=PLmAWMAo-opQxBRwmZjoFzTynYyB-TqfoM&t=614
+            Member member = (Member) resultData.getData();
+            rq.setCoolie("loggedInMemberId", member.getId());
         }
         return memberService.tryLogin(username, password);
     }
@@ -137,16 +143,11 @@ public class MemberController
     @ResponseBody
     public ResultData logout(HttpServletRequest req, HttpServletResponse resp)
     {
-        if (req.getCookies() != null) //요청에 쿠키가 없으면
+        Rq rq = new Rq(req, resp);
+        boolean isCookieRemoved = rq.removeCoolie("loggedInMemberId"); //쿠키 삭제
+        if (!isCookieRemoved)
         {
-            Arrays.stream(req.getCookies()) //요청에 있는 쿠키들을 스트림으로 변환
-                .filter(c -> c.getName().equals("loggedInMemberId")) //쿠키 이름이 count 인 것만 필터링
-                //.forEach(cookie -> cookie.setMaxAge(0)); //쿠키만료
-                //.forEach(cookie -> {cookie.setMaxAge(0); resp.addCookie(cookie);}); //쿠키만료
-                .forEach(cookie -> {
-                    cookie.setMaxAge(0); //쿠키만료
-                    resp.addCookie(cookie); //민료된 쿠키 다시 추가
-                });
+            return ResultData.of("F-1", "이미 로그아웃 상태입니다. 쿠키가 존재하지 않습니다.");
         }
         return ResultData.of("S-1", "로그아웃 되었습니다.");
     }

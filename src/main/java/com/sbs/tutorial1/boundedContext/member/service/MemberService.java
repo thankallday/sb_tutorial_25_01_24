@@ -44,7 +44,8 @@ public class MemberService
         if(!member.getPassword().equals(password))
             return ResultData.of("F-4", "비밀번호가 일치하지 않습니다.");
 
-        return ResultData.of("S-1", "%s 님 환영합니다.".formatted(username), member.getId());
+        //return ResultData.of("S-1", "%s 님 환영합니다.".formatted(username), member.getId());
+        return ResultData.of("S-1", "%s 님 환영합니다.".formatted(username), member);
     }
 
     public Member findById(long loggedInMemberId)
